@@ -4,10 +4,6 @@ import {PostType} from "./posts-db-repository";
 
 const mongoUri = process.env.mongoURI!
 
-export const client = new MongoClient(mongoUri);
-export const bloggersCollection = client.db("bloggers-db").collection<BloggerType>("bloggers");
-export const postsCollection = client.db("bloggers-db").collection<PostType>("posts");
-
 export async function runDb() {
     try {
         // Connect the client to the server
@@ -21,3 +17,7 @@ export async function runDb() {
         await client.close();
     }
 }
+
+export const client = new MongoClient(mongoUri);
+export const bloggersCollection = client.db("bloggers-db").collection<BloggerType>("bloggers");
+export const postsCollection = client.db("bloggers-db").collection<PostType>("posts");
