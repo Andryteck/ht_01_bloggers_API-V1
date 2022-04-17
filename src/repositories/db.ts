@@ -2,8 +2,7 @@ import {MongoClient} from 'mongodb'
 import {BloggerType} from "./bloggers-db-repository";
 import {PostType} from "./posts-db-repository";
 
-const mongoUri =
-    process.env.mongoURI = "mongodb://localhost:27017/?maxPoolSize=20&w=majority";
+const mongoUri = process.env.mongoURI || "mongodb://localhost:27017/?maxPoolSize=20&w=majority";
 
 export const client = new MongoClient(mongoUri);
 export const bloggersCollection = client.db("bloggers").collection<BloggerType>("bloggers");
