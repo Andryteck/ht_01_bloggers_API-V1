@@ -45,6 +45,7 @@ export const postsDbRepository = {
         const posts: PostType[] = await postsCollection.find({}).toArray()
         for (let i = 0; i < posts.length; i++) {
             if (posts[i].id === id) {
+                // @ts-ignore
                 const result = await postsCollection.deleteOne({"_id": ObjectId(posts[i]._id)})
                 return result.deletedCount === 1
             }

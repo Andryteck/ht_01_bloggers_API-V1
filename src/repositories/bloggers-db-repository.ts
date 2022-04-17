@@ -41,7 +41,7 @@ export const bloggersDbRepository = {
         const bloggers = await bloggersCollection.find({}).toArray()
         for (let i = 0; i < bloggers.length; i++) {
             if (bloggers[i].id === id) {
-                console.log(1, bloggers[i].id)
+                // @ts-ignore
                 const result = await bloggersCollection.deleteOne({"_id": ObjectId(bloggers[i]._id)})
                 return result.deletedCount === 1
             }
