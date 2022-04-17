@@ -32,8 +32,8 @@ bloggerRouter.put('/:id',
     })
 
 bloggerRouter.get('/', async (req: Request, res: Response) => {
-    const foundBloggers = await bloggersService.findBloggers()
-    res.send(foundBloggers)
+    // const foundBloggers = await bloggersService.findBloggers()
+    res.send('Hello')
 })
 bloggerRouter.get('/:id', async (req: Request, res: Response) => {
     let product = await bloggersService.findBloggerById(+req.params.id)
