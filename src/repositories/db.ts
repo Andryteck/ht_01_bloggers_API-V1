@@ -5,8 +5,8 @@ import {PostType} from "./posts-db-repository";
 const mongoUri = process.env.mongoURI || "mongodb://localhost:27017/?maxPoolSize=20&w=majority";
 
 export const client = new MongoClient(mongoUri);
-export const bloggersCollection = client.db("bloggers").collection<BloggerType>("bloggers");
-export const postsCollection = client.db("bloggers").collection<PostType>("posts");
+export const bloggersCollection = client.db("bloggers-db").collection<BloggerType>("bloggers");
+export const postsCollection = client.db("bloggers-db").collection<PostType>("posts");
 
 export async function runDb() {
     try {
