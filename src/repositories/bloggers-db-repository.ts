@@ -9,7 +9,7 @@ export type BloggerType = {
 
 export const bloggersDbRepository = {
     async findBloggers(): Promise<BloggerType[]> {
-        return bloggersCollection.find({}).toArray()
+        return await bloggersCollection.find({}).toArray()
     },
     async findBloggerById(id: number): Promise<BloggerType | null> {
         const blogger = await bloggersCollection.findOne({id: id})
@@ -20,17 +20,14 @@ export const bloggersDbRepository = {
         }
     },
     async createBlogger(newBlogger: BloggerType): Promise<BloggerType> {
-        const result = await bloggersCollection.insertOne(newBlogger)
-        if (result.insertedId) {
+       await bloggersCollection.insertOne(newBlogger)
             return {
                 id: newBlogger.id,
                 name: newBlogger.name,
                 youtubeUrl: newBlogger.youtubeUrl
             }
-        } else {
-            throw new Error('Error while creating new blogger')
-        }
     },
+
     async updateBlogger(id: number, name: string, url: string): Promise<boolean | undefined> {
         const blogger = await bloggersCollection.findOne({id: id})
         if (blogger) {
