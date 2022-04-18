@@ -22,7 +22,11 @@ export const bloggersDbRepository = {
     async createBlogger(newBlogger: BloggerType): Promise<BloggerType> {
         const result = await bloggersCollection.insertOne(newBlogger)
         if (result.insertedId) {
-            return newBlogger
+            return {
+                id: newBlogger.id,
+                name: newBlogger.name,
+                youtubeUrl: newBlogger.youtubeUrl
+            }
         } else {
             throw new Error('Error while creating new blogger')
         }

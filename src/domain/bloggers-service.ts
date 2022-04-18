@@ -21,8 +21,7 @@ export const bloggersService = {
             youtubeUrl: url
         };
 
-        await bloggersDbRepository.createBlogger(newBlogger);
-        return newBlogger;
+        return await bloggersDbRepository.createBlogger(newBlogger);
     },
     async updateBlogger(id: number, title: string, url: string): Promise<boolean | undefined> {
         return await bloggersDbRepository.updateBlogger(id, title, url);

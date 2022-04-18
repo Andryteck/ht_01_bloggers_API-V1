@@ -13,8 +13,8 @@ bloggerRouter.post('/',
     youtubeUrlValidation,
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
-        const newProduct = await bloggersService.createBlogger(req.body.name, req.body.youtubeUrl)
-        res.status(201).send(newProduct)
+        const newBlogger = await bloggersService.createBlogger(req.body.name, req.body.youtubeUrl)
+        res.status(201).send(newBlogger)
     })
 
 bloggerRouter.put('/:id',
@@ -33,7 +33,7 @@ bloggerRouter.put('/:id',
 
 bloggerRouter.get('/', async (req: Request, res: Response) => {
     const foundBloggers = await bloggersService.findBloggers()
-    res.send(foundBloggers)
+    res.status(200).send(foundBloggers)
 })
 bloggerRouter.get('/:id', async (req: Request, res: Response) => {
     let product = await bloggersService.findBloggerById(+req.params.id)
