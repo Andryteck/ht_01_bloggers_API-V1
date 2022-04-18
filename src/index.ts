@@ -12,8 +12,8 @@ app.use(jsonBodyMiddleware)
 
 const port = process.env.PORT || 5000
 
-app.use('/bloggers', bloggerRouter)
-app.use('/posts', postRouter)
+app.use('/api/bloggers', bloggerRouter)
+app.use('/api/posts', postRouter)
 
 const startApp = async () => {
     await runDb()
