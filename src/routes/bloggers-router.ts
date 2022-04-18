@@ -13,8 +13,11 @@ bloggerRouter.post('/',
     youtubeUrlValidation,
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
-        const newBlogger = await bloggersService.createBlogger(req.body.name, req.body.youtubeUrl)
-        res.status(201).send(newBlogger)
+        res.status(201).send(
+            await bloggersService.createBlogger(req.body.name,
+                req.body.youtubeUrl
+            )
+        )
     })
 
 bloggerRouter.put('/:id',
