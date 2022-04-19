@@ -14,9 +14,9 @@ postRouter.get('/', async (req: Request, res: Response) => {
 })
 
 postRouter.post('/',
-    titleValidation,
-    bloggerIdValidation,
-    inputValidatorMiddleware,
+    // titleValidation,
+    // bloggerIdValidation,
+    // inputValidatorMiddleware,
     async (req: Request, res: Response) => {
     const body = req.body
     const createdPost = await postsService.createPost(body)
@@ -39,25 +39,12 @@ postRouter.get('/:id', async (req: Request, res: Response) => {
 
 
 postRouter.put('/:id',
-    titleValidation,
-    bloggerIdValidation,
-    inputValidatorMiddleware,
+    // titleValidation,
+    // bloggerIdValidation,
+    // inputValidatorMiddleware,
     async (req: Request, res: Response) => {
     const id = +req.params.id
     const body = req.body
-    // if (post) {
-    //     if (req.body.hasOwnProperty('title') && req.body.hasOwnProperty('shortDescription') && req.body.hasOwnProperty('content') && req.body.hasOwnProperty('bloggerId')) {
-    //         post.title = req.body.title
-    //         post.shortDescription = req.body.shortDescription
-    //         post.content = req.body.content
-    //         post.bloggerId = req.body.bloggerId
-    //     } else {
-    //         res.sendStatus(400)
-    //     }
-    //     res.sendStatus(204)
-    // } else {
-    //     res.sendStatus(404)
-    // }
     const isUpdated = await postsService.updatePost(id, body)
     if (isUpdated) {
         res.sendStatus(204)
