@@ -26,11 +26,18 @@ bloggerRouter.put('/:id',
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
         const isUpdated = await bloggersService.updateBlogger(+req.params.id, req.body.name, req.body.youtubeUrl)
-        if (isUpdated) {
-            const product = await bloggersService.findBloggerById(+req.params.id)
-            res.send(product)
+        if (!isUpdated) {
+            res.status(404)
+            res.send({
+                "data": {},
+                "errorsMessages": [{
+                    message: "blogger not found",
+                    field: "id"
+                }],
+                "resultCode": 0
+            })
         } else {
-            res.send(404)
+            res.send(204)
         }
     })
 
@@ -52,6 +59,14 @@ bloggerRouter.delete('/:id', async (req: Request, res: Response) => {
     if (isDeleted) {
         res.send(204)
     } else {
-        res.send(404)
+        res.status(404)
+        res.send({
+            "data": {},
+            "errorsMessages": [{
+                message: "blogger not found",
+                field: "id"
+            }],
+            "resultCode": 0
+        })
     }
 })
