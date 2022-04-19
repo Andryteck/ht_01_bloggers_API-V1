@@ -9,14 +9,21 @@ type ErrorMessageType = {
 
 export const bloggersService = {
     async findBloggers(): Promise<BloggerType[]> {
-        return await bloggersDbRepository.findBloggers();
+        const  result = await bloggersDbRepository.findBloggers();
+        return result.map(i => {
+            return {
+                id: i.id,
+                name: i.name,
+                youtubeUrl: i.youtubeUrl,
+            }
+        })
     },
     async findBloggerById(id: number): Promise<BloggerType | null> {
         return await bloggersDbRepository.findBloggerById(id);
     },
     async createBlogger(title: string, url: string): Promise<BloggerType> {
         const newBlogger = {
-            id: +new Date(),
+            id: +(new Date()),
             name: title,
             youtubeUrl: url
         };
