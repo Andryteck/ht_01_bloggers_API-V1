@@ -9,7 +9,7 @@ export type BloggerType = {
 
 export const bloggersDbRepository = {
     async findBloggers(): Promise<BloggerType[]> {
-        return await bloggersCollection.find({}).toArray()
+        return await bloggersCollection.find().toArray()
     },
     async findBloggerById(id: number): Promise<BloggerType | null> {
         const blogger = await bloggersCollection.findOne({id: id})
@@ -20,12 +20,8 @@ export const bloggersDbRepository = {
         }
     },
     async createBlogger(newBlogger: BloggerType): Promise<BloggerType> {
-       await bloggersCollection.insertOne(newBlogger)
-            return {
-                id: newBlogger.id,
-                name: newBlogger.name,
-                youtubeUrl: newBlogger.youtubeUrl
-            }
+      await bloggersCollection.insertOne(newBlogger)
+       return newBlogger
     },
 
     async updateBlogger(id: number, name: string, url: string): Promise<boolean | undefined> {

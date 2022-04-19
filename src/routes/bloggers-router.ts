@@ -17,7 +17,8 @@ bloggerRouter.post('/',
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
         res.status(201).send(
-            await bloggersService.createBlogger(req.body.name,
+            await bloggersService.createBlogger(
+                req.body.name,
                 req.body.youtubeUrl
             )
         )
@@ -62,7 +63,10 @@ bloggerRouter.get('/:bloggerId',
     }
 })
 
-bloggerRouter.delete('/:bloggerId', async (req: Request, res: Response) => {
+bloggerRouter.delete('/:bloggerId',
+    check('bloggerId').isNumeric().withMessage('id should be numeric value'),
+    inputValidatorMiddleware,
+    async (req: Request, res: Response) => {
     const isDeleted = await bloggersService.deleteBlogger(+req.params.bloggerId)
     if (isDeleted) {
         res.send(204)
