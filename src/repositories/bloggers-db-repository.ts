@@ -34,7 +34,7 @@ export const bloggersDbRepository = {
             const result = await bloggersCollection.updateOne({
                 name: blogger.name,
                 youtubeUrl: blogger.youtubeUrl
-            }, {$set: {name, url}})
+            }, {$set: {name, youtubeUrl: url}})
             return result.modifiedCount === 1
         }
     },
