@@ -21,7 +21,11 @@ export const bloggersDbRepository = {
     },
     async createBlogger(newBlogger: BloggerType): Promise<BloggerType> {
       await bloggersCollection.insertOne(newBlogger)
-       return newBlogger
+        return {
+            id: newBlogger.id,
+            name: newBlogger.name,
+            youtubeUrl: newBlogger.youtubeUrl
+        }
     },
 
     async updateBlogger(id: number, name: string, url: string): Promise<boolean | undefined> {

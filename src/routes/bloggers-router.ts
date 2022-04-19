@@ -24,7 +24,7 @@ bloggerRouter.post('/',
         )
     })
 
-bloggerRouter.put('/:bloggerId',
+.put('/:bloggerId',
     check('bloggerId').isNumeric().withMessage('id should be numeric value'),
     body('name').isString().withMessage('Name should be a string')
         .trim().not().isEmpty().withMessage('Name should be not empty'),
@@ -47,11 +47,10 @@ bloggerRouter.put('/:bloggerId',
         }
     })
 
-bloggerRouter.get('/', async (req: Request, res: Response) => {
-    const foundBloggers = await bloggersService.findBloggers()
-    res.status(200).send(foundBloggers)
+.get('/', async (req: Request, res: Response) => {
+    res.send(await bloggersService.findBloggers())
 })
-bloggerRouter.get('/:bloggerId',
+.get('/:bloggerId',
     check('bloggerId').isNumeric().withMessage('id should be numeric value'),
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
@@ -63,7 +62,7 @@ bloggerRouter.get('/:bloggerId',
     }
 })
 
-bloggerRouter.delete('/:bloggerId',
+.delete('/:bloggerId',
     check('bloggerId').isNumeric().withMessage('id should be numeric value'),
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {

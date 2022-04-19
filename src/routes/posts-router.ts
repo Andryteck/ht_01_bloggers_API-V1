@@ -13,7 +13,7 @@ postRouter.get('/', async (req: Request, res: Response) => {
     res.status(200).send(postsWithName)
 })
 
-postRouter.post('/',
+.post('/',
     // titleValidation,
     // bloggerIdValidation,
     // inputValidatorMiddleware,
@@ -27,7 +27,7 @@ postRouter.post('/',
     }
 })
 
-postRouter.get('/:id', async (req: Request, res: Response) => {
+.get('/:id', async (req: Request, res: Response) => {
     const id = +req.params.id
     const post = await postsService.findPostById(id)
     if (post) {
@@ -38,7 +38,7 @@ postRouter.get('/:id', async (req: Request, res: Response) => {
 })
 
 
-postRouter.put('/:id',
+.put('/:id',
     // titleValidation,
     // bloggerIdValidation,
     // inputValidatorMiddleware,
@@ -54,7 +54,7 @@ postRouter.put('/:id',
 
 })
 
-postRouter.delete('/:id', async (req: Request, res: Response) => {
+.delete('/:id', async (req: Request, res: Response) => {
     const isDeleted = await postsService.deletePost(+req.params.id)
     if (isDeleted) {
         res.sendStatus(204)
