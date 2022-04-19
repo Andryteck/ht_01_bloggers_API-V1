@@ -6,6 +6,8 @@ import {
     youtubeUrlValidation
 } from "../middlewares/input-validator-middleware";
 import {body, check} from "express-validator";
+import {authMiddleware} from "../middlewares/auth-middleware";
+import {postsService} from "../domain/posts-service";
 
 export const bloggerRouter = Router({})
 const urlValidator = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
@@ -23,6 +25,22 @@ bloggerRouter.post('/',
             )
         )
     })
+    .post('/:bloggerId/posts',
+        body('title').isString().withMessage('Name should be a string')
+            .trim().not().isEmpty().withMessage('Name should be not empty'),
+        body('shortDescription').isString().withMessage('shortDescription should be a string')
+            .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
+        body('content').isString().withMessage('shortDescription should be a string')
+            .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
+        inputValidatorMiddleware,
+        authMiddleware,
+        // check
+        async (req: Request, res: Response) => {
+            const bloggerId = +req.params.bloggerId
+            res.status(201).send(
+                await postsService.createPost(req.body)
+            )
+        })
 
 .put('/:bloggerId',
     check('bloggerId').isNumeric().withMessage('id should be numeric value'),
@@ -31,8 +49,8 @@ bloggerRouter.post('/',
     body('youtubeUrl').matches(urlValidator)
         .withMessage('URL invalid'),
     async (req: Request, res: Response) => {
-        const isUpdated = await bloggersService.updateBlogger(+req.params.bloggerId, req.body.name, req.body.youtubeUrl)
-        if (!isUpdated) {
+        const updatedBlogger = await bloggersService.updateBlogger(+req.params.bloggerId, req.body.name, req.body.youtubeUrl)
+        if (!updatedBlogger) {
             res.status(404)
             res.send({
                 "data": {},
