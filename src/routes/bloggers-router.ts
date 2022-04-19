@@ -9,9 +9,9 @@ import {
 export const bloggerRouter = Router({})
 
 bloggerRouter.post('/',
-    nameValidation,
-    youtubeUrlValidation,
-    inputValidatorMiddleware,
+    // nameValidation,
+    // youtubeUrlValidation,
+    // inputValidatorMiddleware,
     async (req: Request, res: Response) => {
         res.status(201).send(
             await bloggersService.createBlogger(req.body.name,
