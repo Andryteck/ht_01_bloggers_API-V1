@@ -1,4 +1,4 @@
-import { postsCollection } from "./db";
+import {bloggersCollection, postsCollection} from "./db";
 import {ObjectId} from "mongodb";
 
 export type PostType = {
@@ -7,29 +7,38 @@ export type PostType = {
     shortDescription: string,
     content: string,
     bloggerId: number,
+    bloggerName?: string,
 }
 
 export const postsDbRepository = {
     async findPosts(): Promise<PostType[]> {
-        return postsCollection.find({}).toArray()
+        // @ts-ignore
+        return postsCollection.find({}, {_id: 0}).toArray()
     },
     async findBPostsById(id: number): Promise<PostType | null> {
         const post = await postsCollection.findOne({id: id})
         if (post) {
+            // @ts-ignore
+            delete post._id
             return post
         } else {
             return null
         }
     },
     async createPost(newPost: PostType): Promise<PostType> {
-        const result = await postsCollection.insertOne(newPost)
-        if (result.insertedId) {
-            return newPost
-        } else {
-            throw new Error('Error while creating new blogger')
-        }
+        const blogger = await bloggersCollection.findOne({id: newPost.bloggerId})
+        await postsCollection.insertOne({
+            ...newPost,
+            bloggerName: blogger!.name
+        })
+        const post = await postsCollection.findOne({id: newPost.id})
+        // @ts-ignore
+        delete post!._id
+        // @ts-ignore
+        return post
+
     },
-    async updatePost(id: number, title: string, shortDescription: string, content:string, bloggerId: number): Promise<boolean | undefined> {
+    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean | undefined> {
         const post = await postsCollection.findOne({id: id})
         if (post) {
             const result = await postsCollection.updateOne({

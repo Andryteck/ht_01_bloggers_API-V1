@@ -1,10 +1,11 @@
 import {Router, Request, Response} from "express";
 import {postsService} from "../domain/posts-service";
 import {
-    bloggerIdValidation,
     inputValidatorMiddleware,
-    titleValidation
 } from "../middlewares/input-validator-middleware";
+import {body} from "express-validator";
+import {authMiddleware} from "../middlewares/auth-middleware";
+import {bloggersService} from "../domain/bloggers-service";
 
 export const postRouter = Router({})
 
@@ -13,18 +14,38 @@ postRouter.get('/', async (req: Request, res: Response) => {
     res.status(200).send(postsWithName)
 })
 
-.post('/',
-    // titleValidation,
-    // bloggerIdValidation,
-    // inputValidatorMiddleware,
+.post('/:bloggerId',
+    body('title').isString().withMessage('Name should be a string')
+        .trim().not().isEmpty().withMessage('Name should be not empty'),
+    body('shortDescription').isString().withMessage('shortDescription should be a string')
+        .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
+    body('content').isString().withMessage('shortDescription should be a string')
+        .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
+    inputValidatorMiddleware,
+    authMiddleware,
     async (req: Request, res: Response) => {
-    const body = req.body
-    const createdPost = await postsService.createPost(body)
-    if (createdPost) {
-        res.status(201).send(createdPost)
-    } else {
-        res.sendStatus(400)
-    }
+        const bloggerId: number = +req.params.bloggerId
+        const blogger = await bloggersService.findBloggerById(bloggerId)
+        if (!blogger) {
+            res.status(400).send({
+                "data": {},
+                "errorsMessages": [
+                    {
+                        message: "blogger not found",
+                        field: "blogger"
+                    }
+                ],
+                "resultCode": 1
+            })
+        } else {
+            const newPost = await postsService.createPost({
+                title: req.body.title,
+                shortDescription: req.body.shortDescription,
+                content: req.body.content,
+                bloggerId,
+            })
+            res.status(201).send(newPost)
+        }
 })
 
 .get('/:id', async (req: Request, res: Response) => {
