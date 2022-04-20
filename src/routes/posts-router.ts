@@ -10,8 +10,8 @@ import {bloggersService} from "../domain/bloggers-service";
 export const postRouter = Router({})
 
 postRouter.get('/', async (req: Request, res: Response) => {
-    const postsWithName = await postsService.findPosts()
-    res.status(200).send(postsWithName)
+    const posts = await postsService.findPosts()
+    res.status(200).send(posts)
 })
 
 .post('/:bloggerId',

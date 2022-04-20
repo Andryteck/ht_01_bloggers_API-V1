@@ -3,16 +3,7 @@ import {bloggersDbRepository} from "../repositories/bloggers-db-repository";
 
 export const postsService = {
     async findPosts(): Promise<PostType[]> {
-        const posts = await postsDbRepository.findPosts();
-        console.log(1, posts)
-        const bloggers = await bloggersDbRepository.findBloggers();
-        console.log(1, bloggers)
-        return posts.map(i => {
-            return {
-                ...i,
-                bloggerName: bloggers.find(b => b.id === i.bloggerId)?.name || '',
-            }
-        })
+        return await postsDbRepository.findPosts();
     },
     async findPostById(id: number): Promise<PostType | null> {
         return postsDbRepository.findBPostsById(id);

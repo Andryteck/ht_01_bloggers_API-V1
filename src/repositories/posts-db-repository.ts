@@ -12,8 +12,7 @@ export type PostType = {
 
 export const postsDbRepository = {
     async findPosts(): Promise<PostType[]> {
-        // @ts-ignore
-        return postsCollection.find({}, {_id: 0}).toArray()
+        return postsCollection.find().toArray()
     },
     async findBPostsById(id: number): Promise<PostType | null> {
         const post = await postsCollection.findOne({id: id})
