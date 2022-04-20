@@ -14,7 +14,7 @@ postRouter.get('/', async (req: Request, res: Response) => {
     res.status(200).send(posts)
 })
 
-.post('/:bloggerId',
+.post('/',
     body('title').isString().withMessage('Name should be a string')
         .trim().not().isEmpty().withMessage('Name should be not empty'),
     body('shortDescription').isString().withMessage('shortDescription should be a string')
@@ -24,7 +24,7 @@ postRouter.get('/', async (req: Request, res: Response) => {
     inputValidatorMiddleware,
     authMiddleware,
     async (req: Request, res: Response) => {
-        const bloggerId: number = +req.params.bloggerId
+        const bloggerId: number = +req.body.bloggerId
         const blogger = await bloggersService.findBloggerById(bloggerId)
         if (!blogger) {
             res.status(400).send({
@@ -48,11 +48,11 @@ postRouter.get('/', async (req: Request, res: Response) => {
         }
 })
 
-.get('/:id',
+.get('/:postId',
     check('postId').isNumeric().withMessage('id should be numeric value'),
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
-    const id = +req.params.id
+    const id = +req.params.postId
     const post = await postsService.findPostById(id)
         if (post) {
             res.send(post)

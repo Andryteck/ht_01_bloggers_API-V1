@@ -2,8 +2,6 @@ import {Request, Response, Router} from 'express'
 import {bloggersService} from "../domain/bloggers-service";
 import {
     inputValidatorMiddleware,
-    nameValidation,
-    youtubeUrlValidation
 } from "../middlewares/input-validator-middleware";
 import {body, check} from "express-validator";
 import {authMiddleware} from "../middlewares/auth-middleware";
@@ -25,6 +23,7 @@ bloggerRouter.post('/',
             )
         )
     })
+
     .post('/:bloggerId/posts',
         body('title').isString().withMessage('Name should be a string')
             .trim().not().isEmpty().withMessage('Name should be not empty'),
@@ -34,11 +33,15 @@ bloggerRouter.post('/',
             .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
         inputValidatorMiddleware,
         authMiddleware,
-        // check
         async (req: Request, res: Response) => {
             const bloggerId = +req.params.bloggerId
             res.status(201).send(
-                await postsService.createPost(req.body)
+                await postsService.createPost({
+                    title: req.body.title,
+                    shortDescription: req.body.shortDescription,
+                    content: req.body.content,
+                    bloggerId,
+                })
             )
         })
 
