@@ -1,8 +1,13 @@
 import {MongoClient} from 'mongodb'
 import {BloggerType} from "./bloggers-db-repository";
 import {PostType} from "./posts-db-repository";
+import 'dotenv/config'
 
-const mongoUri = process.env.mongoURI!
+const mongoUri = process.env.MONGO_URI!
+
+export const client = new MongoClient(mongoUri);
+export const bloggersCollection = client.db("bloggers-db").collection<BloggerType>("bloggers");
+export const postsCollection = client.db("bloggers-db").collection<PostType>("posts");
 
 export async function runDb() {
     try {
@@ -18,6 +23,4 @@ export async function runDb() {
     }
 }
 
-export const client = new MongoClient(mongoUri);
-export const bloggersCollection = client.db("bloggers-db").collection<BloggerType>("bloggers");
-export const postsCollection = client.db("bloggers-db").collection<PostType>("posts");
+
