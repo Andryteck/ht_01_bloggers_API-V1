@@ -48,6 +48,7 @@ bloggerRouter.post('/',
         .trim().not().isEmpty().withMessage('Name should be not empty'),
     body('youtubeUrl').matches(urlValidator)
         .withMessage('URL invalid'),
+    inputValidatorMiddleware,
     async (req: Request, res: Response) => {
         const updatedBlogger = await bloggersService.updateBlogger(+req.params.bloggerId, req.body.name, req.body.youtubeUrl)
         if (!updatedBlogger) {
@@ -72,11 +73,19 @@ bloggerRouter.post('/',
     check('bloggerId').isNumeric().withMessage('id should be numeric value'),
     inputValidatorMiddleware,
     async (req: Request, res: Response) => {
-    let product = await bloggersService.findBloggerById(+req.params.bloggerId)
-    if (product) {
-        res.send(product)
+    let blogger = await bloggersService.findBloggerById(+req.params.bloggerId)
+    if (blogger) {
+        res.send(blogger)
     } else {
-        res.send(404)
+        res.status(404)
+        res.send({
+            "data": {},
+            "errorsMessages": [{
+                message: "blogger not found",
+                field: "id"
+            }],
+            "resultCode": 1
+        })
     }
 })
 

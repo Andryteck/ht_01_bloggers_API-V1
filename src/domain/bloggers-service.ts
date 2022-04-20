@@ -35,7 +35,7 @@ export const bloggersService = {
 
         return await bloggersDbRepository.createBlogger(newBlogger);
     },
-    async updateBlogger(id: number, title: string, url: string): Promise<boolean | undefined> {
+    async updateBlogger(id: number, title: string, url: string): Promise<boolean | BloggerType> {
         return await bloggersDbRepository.updateBlogger(id, title, url);
     },
     async deleteBlogger(id: number): Promise<boolean> {

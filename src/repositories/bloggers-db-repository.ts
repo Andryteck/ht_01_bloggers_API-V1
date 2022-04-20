@@ -28,7 +28,7 @@ export const bloggersDbRepository = {
         }
     },
 
-    async updateBlogger(id: number, name: string, url: string): Promise<boolean | undefined> {
+    async updateBlogger(id: number, name: string, url: string): Promise<boolean | BloggerType> {
         const result = await bloggersCollection.updateOne({id},
             {
                 $set: {
