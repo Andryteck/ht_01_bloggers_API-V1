@@ -5,8 +5,11 @@ export const postsService = {
     async findPosts(): Promise<PostType[]> {
         return await postsDbRepository.findPosts();
     },
-    async findPostById(id: number): Promise<PostType | null> {
-        return postsDbRepository.findBPostsById(id);
+    async findPostById(id: number): Promise<PostType | boolean> {
+        const post = postsDbRepository.findBPostsById(id)
+        if (post) {
+            return post
+        } else return false
     },
     async createPost(newPostData: Omit<PostType, 'id'>): Promise<PostType> {
         const newPost = {
@@ -16,7 +19,12 @@ export const postsService = {
 
         return await postsDbRepository.createPost(newPost);
     },
-    async updatePost(id: number, {title, shortDescription,content,bloggerId }: PostType): Promise<boolean | undefined> {
+    async updatePost(id: number, {
+        title,
+        shortDescription,
+        content,
+        bloggerId
+    }: PostType): Promise<boolean | undefined> {
         return await postsDbRepository.updatePost(id, title, shortDescription, content, bloggerId);
     },
     async deletePost(id: number): Promise<boolean> {

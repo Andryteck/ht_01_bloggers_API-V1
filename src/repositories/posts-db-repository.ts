@@ -1,5 +1,6 @@
 import {bloggersCollection, postsCollection} from "./db";
 import {ObjectId} from "mongodb";
+import {bloggersDbRepository} from "./bloggers-db-repository";
 
 export type PostType = {
     id: number,
@@ -14,15 +15,22 @@ export const postsDbRepository = {
     async findPosts(): Promise<PostType[]> {
         return postsCollection.find().toArray()
     },
-    async findBPostsById(id: number): Promise<PostType | null> {
+    async findBPostsById(id: number): Promise<PostType | boolean> {
         const post = await postsCollection.findOne({id: id})
-        if (post) {
-            // @ts-ignore
-            delete post._id
-            return post
-        } else {
-            return null
-        }
+        if (!post) return false
+        const blogger = await bloggersDbRepository.findBloggerById(post.bloggerId)
+        if (!blogger) return false
+        const bloggerName = blogger.name
+        // @ts-ignore
+        delete post._id
+        return ({
+            id: post.id,
+            title: post.title,
+            shortDescription: post.shortDescription,
+            content: post.content,
+            bloggerId: post.bloggerId,
+            bloggerName
+        })
     },
     async createPost(newPost: PostType): Promise<PostType> {
         const blogger = await bloggersCollection.findOne({id: newPost.bloggerId})
@@ -50,14 +58,7 @@ export const postsDbRepository = {
         }
     },
     async deletePost(id: number): Promise<boolean> {
-        const posts: PostType[] = await postsCollection.find({}).toArray()
-        for (let i = 0; i < posts.length; i++) {
-            if (posts[i].id === id) {
-                // @ts-ignore
-                const result = await postsCollection.deleteOne({"_id": ObjectId(posts[i]._id)})
-                return result.deletedCount === 1
-            }
-        }
-        return false
+        const result = await postsCollection.deleteOne({id})
+        return result.deletedCount === 1
     }
 }

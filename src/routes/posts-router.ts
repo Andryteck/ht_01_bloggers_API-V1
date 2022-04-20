@@ -3,7 +3,7 @@ import {postsService} from "../domain/posts-service";
 import {
     inputValidatorMiddleware,
 } from "../middlewares/input-validator-middleware";
-import {body} from "express-validator";
+import {body, check} from "express-validator";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {bloggersService} from "../domain/bloggers-service";
 
@@ -48,14 +48,24 @@ postRouter.get('/', async (req: Request, res: Response) => {
         }
 })
 
-.get('/:id', async (req: Request, res: Response) => {
+.get('/:id',
+    check('postId').isNumeric().withMessage('id should be numeric value'),
+    inputValidatorMiddleware,
+    async (req: Request, res: Response) => {
     const id = +req.params.id
     const post = await postsService.findPostById(id)
-    if (post) {
-        res.status(200).send(post)
-    } else {
-        res.sendStatus(404)
-    }
+        if (post) {
+            res.send(post)
+        } else {
+            res.status(404).send({
+                "data": {},
+                "errorsMessages": [{
+                    message: "post not found",
+                    field: "id"
+                }],
+                "resultCode": 1
+            })
+        }
 })
 
 
@@ -75,11 +85,20 @@ postRouter.get('/', async (req: Request, res: Response) => {
 
 })
 
-.delete('/:id', async (req: Request, res: Response) => {
+.delete('/:id',
+
+    async (req: Request, res: Response) => {
     const isDeleted = await postsService.deletePost(+req.params.id)
     if (isDeleted) {
         res.sendStatus(204)
     } else {
-        res.sendStatus(404)
+        res.status(404).send({
+            "data": {},
+            "errorsMessages": [{
+                message: "post not found",
+                field: "id"
+            }],
+            "resultCode": 1
+        })
     }
 })
