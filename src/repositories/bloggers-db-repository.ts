@@ -11,12 +11,14 @@ export const bloggersDbRepository = {
     async findBloggers(): Promise<BloggerType[]> {
         return await bloggersCollection.find().toArray()
     },
-    async findBloggerById(id: number): Promise<BloggerType | null> {
+    async findBloggerById(id: number): Promise<BloggerType | boolean> {
         const blogger = await bloggersCollection.findOne({id: id})
         if (blogger) {
+            // @ts-ignore
+            delete blogger._id
             return blogger
         } else {
-            return null
+            return false
         }
     },
     async createBlogger(newBlogger: BloggerType): Promise<BloggerType> {

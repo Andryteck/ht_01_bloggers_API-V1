@@ -75,7 +75,7 @@ bloggerRouter.post('/',
     async (req: Request, res: Response) => {
     let blogger = await bloggersService.findBloggerById(+req.params.bloggerId)
     if (blogger) {
-        res.send(blogger)
+        res.status(200).send(blogger)
     } else {
         res.status(404)
         res.send({
