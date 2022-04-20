@@ -20,13 +20,13 @@ export const bloggersService = {
     },
     async findBloggerById(id: number): Promise<BloggerType | null> {
         const result = await bloggersDbRepository.findBloggerById(id)
-        if (result) {
+        if (!result) return null
+
             return {
                 id: result!.id,
                 name: result!.name,
                 youtubeUrl: result!.youtubeUrl,
             }
-        }
     },
     async createBlogger(title: string, url: string): Promise<BloggerType> {
         const newBlogger = {
