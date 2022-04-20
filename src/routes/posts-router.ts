@@ -69,12 +69,19 @@ postRouter.get('/', async (req: Request, res: Response) => {
 })
 
 
-.put('/:id',
-    // titleValidation,
-    // bloggerIdValidation,
-    // inputValidatorMiddleware,
+.put('/:postId',
+    body('title').isString().withMessage('Name should be a string')
+        .trim().not().isEmpty().withMessage('Name should be not empty'),
+    body('shortDescription').isString().withMessage('shortDescription should be a string')
+        .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
+    body('content').isString().withMessage('shortDescription should be a string')
+        .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
+    body('content').isString().withMessage('shortDescription should be a string'),
+    check('postId').isNumeric().withMessage('id should be numeric value'),
+    inputValidatorMiddleware,
+    authMiddleware,
     async (req: Request, res: Response) => {
-    const id = +req.params.id
+    const id = +req.params.postId
     const body = req.body
     const isUpdated = await postsService.updatePost(id, body)
     if (isUpdated) {

@@ -1,9 +1,12 @@
 import {postsDbRepository, PostType} from "../repositories/posts-db-repository";
-import {bloggersDbRepository} from "../repositories/bloggers-db-repository";
 
 export const postsService = {
     async findPosts(): Promise<PostType[]> {
-        return await postsDbRepository.findPosts();
+        const posts = await postsDbRepository.findPosts();
+        return posts.map(i => {
+            delete i._id
+            return i
+        })
     },
     async findPostById(id: number): Promise<PostType | boolean> {
         const post = postsDbRepository.findBPostsById(id)

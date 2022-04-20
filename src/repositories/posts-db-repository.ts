@@ -1,8 +1,8 @@
 import {bloggersCollection, postsCollection} from "./db";
-import {ObjectId} from "mongodb";
 import {bloggersDbRepository} from "./bloggers-db-repository";
 
 export type PostType = {
+    _id?: number
     id: number,
     title: string,
     shortDescription: string,
@@ -47,16 +47,13 @@ export const postsDbRepository = {
 
     },
     async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean | undefined> {
-        const post = await postsCollection.findOne({id: id})
-        if (post) {
-            const result = await postsCollection.updateOne({
-                title: post.title,
-                shortDescription: post.shortDescription,
-                content: post.content,
-                bloggerId: post.bloggerId,
-            }, {$set: {title, shortDescription, content, bloggerId}})
-            return result.modifiedCount === 1
-        }
+        const result = await postsCollection.updateOne({id}, {$set:{
+                title: title,
+                shortDescription: shortDescription,
+                content: content,
+                bloggerId: bloggerId
+            }})
+        return result.modifiedCount === 1
     },
     async deletePost(id: number): Promise<boolean> {
         const result = await postsCollection.deleteOne({id})
