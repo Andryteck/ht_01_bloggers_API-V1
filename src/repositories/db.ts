@@ -4,7 +4,7 @@ import {PostType} from "./posts-db-repository";
 import 'dotenv/config'
 
 const mongoUri = process.env.MONGO_URI!
-
+console.log(1, mongoUri)
 export const client = new MongoClient(mongoUri);
 export const bloggersCollection = client.db("bloggers-db").collection<BloggerType>("bloggers");
 export const postsCollection = client.db("bloggers-db").collection<PostType>("posts");
