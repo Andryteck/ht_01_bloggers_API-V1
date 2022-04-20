@@ -20,6 +20,7 @@ export const postsDbRepository = {
         if (!post) return false
         const blogger = await bloggersDbRepository.findBloggerById(post.bloggerId)
         if (!blogger) return false
+        // @ts-ignore
         const bloggerName = blogger.name
         // @ts-ignore
         delete post._id
