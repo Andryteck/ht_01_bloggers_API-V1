@@ -83,12 +83,38 @@ postRouter.get('/', async (req: Request, res: Response) => {
     async (req: Request, res: Response) => {
     const id = +req.params.postId
     const body = req.body
-    const isUpdated = await postsService.updatePost(id, body)
-    if (isUpdated) {
-        res.sendStatus(204)
-    } else {
-        res.sendStatus(404)
-    }
+        const updatePost = {
+            title: body.title,
+            shortDescription: body.shortDescription,
+            content: body.content,
+            bloggerId: body.bloggerId
+        }
+        const blogger = await bloggersService.findBloggerById(updatePost.bloggerId)
+        if(!blogger){
+            res.status(400).send({
+                "data": {},
+                "errorsMessages": [{
+                    message: "blogger not found",
+                    field: "bloggerId"
+                }],
+                "resultCode": 0
+            })
+            return
+        }
+        const updatedPost = await postsService.updatePost(id, updatePost)
+        if (!updatedPost) {
+            res.status(404)
+            res.send({
+                "data": {},
+                "errorsMessages": [{
+                    message: "post not found",
+                    field: "id"
+                }],
+                "resultCode": 0
+            })
+        } else {
+            res.status(204).send(updatedPost)
+        }
 
 })
 

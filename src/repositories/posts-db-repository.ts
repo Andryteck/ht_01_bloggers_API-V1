@@ -3,7 +3,7 @@ import {bloggersDbRepository} from "./bloggers-db-repository";
 
 export type PostType = {
     _id?: number
-    id: number,
+    id?: number,
     title: string,
     shortDescription: string,
     content: string,
@@ -46,12 +46,12 @@ export const postsDbRepository = {
         return post
 
     },
-    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean | undefined> {
+    async updatePost(id: number, updatedPost: PostType): Promise<boolean | undefined> {
         const result = await postsCollection.updateOne({id}, {$set:{
-                title: title,
-                shortDescription: shortDescription,
-                content: content,
-                bloggerId: bloggerId
+                title: updatedPost.title,
+                shortDescription: updatedPost.shortDescription,
+                content: updatedPost.content,
+                bloggerId: updatedPost.bloggerId
             }})
         return result.modifiedCount === 1
     },
