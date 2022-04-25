@@ -1,12 +1,19 @@
 import {postsDbRepository, PostType} from "../repositories/posts-db-repository";
+import {Paginate} from "../repositories/types";
+import {postsCollection} from "../repositories/db";
+import {BloggerResponse} from "./bloggers-service";
 
 export const postsService = {
-    async findPosts(): Promise<PostType[]> {
-        const posts = await postsDbRepository.findPosts();
-        return posts.map(i => {
-            delete i._id
-            return i
-        })
+    async findPosts(paginate: Paginate): Promise<BloggerResponse<PostType>> {
+        const posts = await postsDbRepository.findPosts(paginate);
+        const total = await postsCollection.countDocuments();
+        return {
+            pagesCount: Math.floor(total / paginate.pageSize!),
+            page: paginate.pageNumber,
+            pageSize: paginate.pageSize,
+            totalCount: total,
+            items: posts
+        }
     },
     async findPostById(id: number): Promise<PostType | boolean> {
         const post = postsDbRepository.findBPostsById(id)

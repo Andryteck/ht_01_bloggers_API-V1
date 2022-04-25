@@ -1,5 +1,6 @@
 import {bloggersCollection, postsCollection} from "./db";
 import {bloggersDbRepository} from "./bloggers-db-repository";
+import {Paginate} from "./types";
 
 export type PostType = {
     _id?: number
@@ -12,8 +13,11 @@ export type PostType = {
 }
 
 export const postsDbRepository = {
-    async findPosts(): Promise<PostType[]> {
-        return postsCollection.find().toArray()
+    async findPosts(paginate: Paginate): Promise<PostType[]> {
+        return postsCollection
+            .find()
+            .limit(paginate.pageSize as number)
+            .skip(paginate.startIndex as number).toArray()
     },
     async findBPostsById(id: number): Promise<PostType | boolean> {
         const post = await postsCollection.findOne({id: id})

@@ -6,11 +6,14 @@ import {
 import {body, check} from "express-validator";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {bloggersService} from "../domain/bloggers-service";
+import {paginate} from "../middlewares/paginate-middleware";
 
 export const postRouter = Router({})
 
-postRouter.get('/', async (req: Request, res: Response) => {
-    const posts = await postsService.findPosts()
+postRouter.get('/',
+    paginate,
+    async (req: Request, res: Response) => {
+    const posts = await postsService.findPosts(req.pagination!)
     res.status(200).send(posts)
 })
 

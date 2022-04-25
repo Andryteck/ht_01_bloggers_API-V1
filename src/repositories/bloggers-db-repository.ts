@@ -1,5 +1,7 @@
-import {bloggersCollection} from "./db";
+import {bloggersCollection, postsCollection} from "./db";
 import {ObjectId} from "mongodb";
+import {Paginate} from "./types";
+import {PostType} from "./posts-db-repository";
 
 export type BloggerType = {
     id: number
@@ -8,8 +10,17 @@ export type BloggerType = {
 }
 
 export const bloggersDbRepository = {
-    async findBloggers(): Promise<BloggerType[]> {
-        return await bloggersCollection.find().toArray()
+    async findBloggers(paginate: Paginate): Promise<BloggerType[]> {
+        return await bloggersCollection.find({
+                name: {
+                    $regex: `${paginate.searchNameTerm}`
+                }
+            },
+            {projection: {_id: 0}}
+        )
+            .limit(paginate.pageSize as number)
+            .skip(paginate.startIndex as number)
+            .toArray()
     },
     async findBloggerById(id: number): Promise<BloggerType | boolean> {
         const blogger = await bloggersCollection.findOne({id: id})
@@ -21,8 +32,22 @@ export const bloggersDbRepository = {
             return false
         }
     },
+
+    async findPostsBloggerById(id: number): Promise<PostType[] | null | undefined> {
+        const blogger = await bloggersCollection.findOne({id: id})
+        if (blogger){
+            const posts = await postsCollection.find({bloggerId: blogger.id}, {projection: {_id: 0}}).toArray()
+            if (posts) {
+                return posts as PostType[]
+            } else {
+                return null
+            }
+        }
+
+    },
+
     async createBlogger(newBlogger: BloggerType): Promise<BloggerType> {
-      await bloggersCollection.insertOne(newBlogger)
+        await bloggersCollection.insertOne(newBlogger)
         return {
             id: newBlogger.id,
             name: newBlogger.name,
