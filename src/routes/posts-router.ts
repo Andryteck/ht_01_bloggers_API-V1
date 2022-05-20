@@ -4,7 +4,7 @@ import {
     inputValidatorMiddleware,
 } from "../middlewares/input-validator-middleware";
 import {body, check} from "express-validator";
-import {authMiddleware} from "../middlewares/auth-middleware";
+import {authService} from "../middlewares/auth-service";
 import {bloggersService} from "../domain/bloggers-service";
 import {paginate} from "../middlewares/paginate-middleware";
 
@@ -25,7 +25,7 @@ postRouter.get('/',
     body('content').isString().withMessage('shortDescription should be a string')
         .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
     inputValidatorMiddleware,
-    authMiddleware,
+    authService,
     async (req: Request, res: Response) => {
         const bloggerId: number = +req.body.bloggerId
         const blogger = await bloggersService.findBloggerById(bloggerId)
@@ -82,7 +82,7 @@ postRouter.get('/',
     body('content').isString().withMessage('shortDescription should be a string'),
     check('postId').isNumeric().withMessage('id should be numeric value'),
     inputValidatorMiddleware,
-    authMiddleware,
+    authService,
     async (req: Request, res: Response) => {
     const id = +req.params.postId
     const body = req.body

@@ -4,7 +4,7 @@ import {
     inputValidatorMiddleware,
 } from "../middlewares/input-validator-middleware";
 import {body, check} from "express-validator";
-import {authMiddleware} from "../middlewares/auth-middleware";
+import {authService} from "../middlewares/auth-service";
 import {postsService} from "../domain/posts-service";
 import {paginate} from "../middlewares/paginate-middleware";
 
@@ -33,7 +33,7 @@ bloggerRouter.post('/',
         body('content').isString().withMessage('shortDescription should be a string')
             .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
         inputValidatorMiddleware,
-        authMiddleware,
+        authService,
         async (req: Request, res: Response) => {
             const bloggerId = +req.params.bloggerId
             res.status(201).send(

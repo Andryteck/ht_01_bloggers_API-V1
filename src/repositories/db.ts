@@ -2,12 +2,15 @@ import {MongoClient} from 'mongodb'
 import {BloggerType} from "./bloggers-db-repository";
 import {PostType} from "./posts-db-repository";
 import 'dotenv/config'
+import {CommentType, UserType} from "../../types/types";
 
 const mongoUri = 'mongodb+srv://Andryteck:772316Andrew@cluster0.qvm8n.mongodb.net/bloggers-db?retryWrites=true&w=majority'
 
 export const client = new MongoClient(mongoUri);
 export const bloggersCollection = client.db("bloggers-db").collection<BloggerType>("bloggers");
 export const postsCollection = client.db("bloggers-db").collection<PostType>("posts");
+export const commentsCollection = client.db("bloggers-db").collection<CommentType>("comments");
+export const usersCollection = client.db("bloggers-db").collection<UserType>("users")
 
 export async function runDb() {
     try {
