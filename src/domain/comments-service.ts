@@ -1,6 +1,6 @@
 import {commentsRepository} from "../repositories/comments-db-repository";
 import {v4 as uuidv4} from "uuid";
-import {QueryDataType} from "../types/types";
+import {QueryDataType} from "../../types/types";
 
 class CommentsService  {
     async getComments(paginationData: QueryDataType, PostId: string | null) {
@@ -14,7 +14,7 @@ class CommentsService  {
     }
 
     async updateCommentById(commentId: string, content: string) {
-        const comment = await commentsRepository.updateComment(commentId, content)
+        const comment = await commentsRepository.updateCommentById(commentId, content)
         return comment
     }
 
